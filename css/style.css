@@ -1,0 +1,59 @@
+body{background-color : "gray";}
+header,nav,footer,article{display:block;}
+nav{float: left;width: 25%; border:groove#000000}
+article{float:right; width: 65%}
+
+footer{clear: both;}
+#canvas{
+	background-color: "white";
+	margin-top: 10px;
+	margin-left: 10px;
+	padding:10px;
+	border:double #0000ff;
+}
+#canvas2{
+	background-color: #fff;
+}
+
+#score-field{
+	display: flex;
+	margin-left: 1000px;
+	z-index: 1;
+	font-size: 25px;
+	position: absolute;
+	color: white;
+}
+
+#xfield{
+	display: flex;
+	margin-left: 400px;
+	margin-top: 275px;
+	z-index: 1;
+	font-size: 25px;
+	position: absolute;
+	color: white;
+}
+
+#xfield-2{
+	display: flex;
+	margin-left: 400px;
+	margin-top: -362px;
+	z-index: 1;
+	font-size: 25px;
+	position: absolute;
+	color: white;
+}
+
+#score-field-2{
+	margin-top: -637px;
+	display: flex;
+	margin-left: 1000px;
+	z-index: 1;
+	font-size: 25px;
+	position: absolute;
+	color: white;
+}
+
+#back-stage{
+	margin-top: 0px;
+}

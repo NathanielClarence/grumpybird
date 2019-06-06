@@ -1,0 +1,13 @@
+- Interaksi user keyboard (arrow) + mouse (down, move , up)
+
+Matematika
+- glbb(parabola) yang diaplikasikan kedalam animasi
+
+
+- friction
+- bouncing
+- rotasi (parabola)
+- collision
+- easing
+
+Resolusi canvas : 1200 x 600

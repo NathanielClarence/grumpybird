@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">    
+    <title>Stage One</title>
+  </head>
+  <body>
+      <img src="assets/Background/background-stage-1.gif" id="back-stage">
+      <img src="blank.png" id="filler">
+      <div id="score-field">
+        <h1>Score: </h1><h1 id="score"> 0</h1>
+      </div>
+      <div id= "xfield">
+        <h1 id = "done"></h1>
+      </div>
+      <canvas id = "canvas" width = "1200" height ="600"></canvas>
+    	<script src = "js/ball.js"></script>
+    	<script src="js/support.js"></script>
+      <script src="js/utils.js"></script>
+      <script src="js/randomColor.js"></script>
+      <script src="js/box.js"></script>
+      <script src="js/enemyBox.js"></script>
+      <script src="js/rock.js"></script>
+      <!--div>
+        <script type="text/javascript">
+          document.getElementById("endStg").innerHTML = "Stage Clear - Press Enter";
+        </script>
+      </div-->
+      <script>
+      var background = new Image();
+      window.onload=function(){
+			var canvas=document.getElementById('canvas'),
+			context=canvas.getContext('2d'),
+      img=document.getElementById("filler");
+			bolaKey=new Ball(5,"red"),
+			bolaMouse=new Rock(15,"green");
+      var mouseDitekan=false;
+      box=new Box(0,0,50,300,"red");
+      box.color=box.randomColor();
+      box.x=500;
+      box.y=canvas.height/2;
+      var dead = 0;
+
+      var enemyBoxes = [
+          new enemyBox(-25,-25,50,50,"red"),
+          new enemyBox(-25,-25,50,50,"red"),
+          new enemyBox(-25,-25,50,50,"red")
+      ];
+      
+      for(var i = 0; i<3;i++){
+      //  enemyBox[i] = new enemyBox(-25,-25,50,50,"red");
+        enemyBoxes[i].x = box.x + ((i+1)*200)+ box.x2;
+        enemyBoxes[i].y = canvas.height-100//enemyBoxes[i].y1;
+      }
+
+      var mouse = supports.captureMouse(canvas);
+			bolaKey.x=200;
+      bolaKey.y=350;
+
+      bolaMouse.x = bolaKey.x;
+      bolaMouse.y = bolaKey.y;
+
+      bolaMouse.vx = 100;
+      bolaMouse.vy = 100;
+
+      if(typeof(Storage)!=="undefined"){
+        localStorage.setItem("score", 0);
+      }else{
+        alert("This browser is not supported");
+      }
+
+      var gravitasi=3,
+      friksi =0.75;
+
+      var jarakY = 0,
+      jarakX = 0;
+
+      var reduceSpd = 0,
+      reduceHt = 0;
+			
+      window.addEventListener("keydown", fungsiKeyboard,false);
+      canvas.addEventListener('mousedown',function(){
+        if(bolaMouse.x!=bolaKey.radius||bolaMouse.y!=bolaKey
+          .radius){
+          mouseDitekan=true;
+
+          canvas.addEventListener('mouseup',onMouseUp,false);
+          canvas.addEventListener('mousemove',onMouseMove,false);
+        }
+
+      function onMouseUp(){
+        mouseDitekan=false;
+
+        jarakX = bolaKey.x-bolaMouse.x,
+        jarakY = bolaKey.y-bolaMouse.y;
+
+        reduceHt = bolaMouse.vy;
+        reduceSpd = bolaMouse.vx;
+
+        canvas.removeEventListener('mouseup',onMouseUp,false);
+        canvas.removeEventListener('mousemove',onMouseMove,false);
+        localStorage.setItem("score", (parseInt(localStorage.getItem("score")) - 25));
+      }
+
+      function onMouseMove(){
+        bolaMouse.x=mouse.x;
+        bolaMouse.y=mouse.y;
+        }
+      });
+
+      function fungsiKeyboard(e){
+        if(e.keyCode == "37"){
+          bolaKey.x-=5;
+        }
+        else if(e.keyCode == "38"){
+          bolaKey.y-=5;
+        }
+        else if(e.keyCode == "39"){
+          bolaKey.x+=5;
+        }
+        else if(e.keyCode == "40"){
+          bolaKey.y+=5;
+        }
+
+        if(bolaKey.x>canvas.width/2){
+          bolaKey.x = canvas.width/2;
+        }else if(bolaKey.x<100)
+          bolaKey.x = 100;
+
+        if(bolaKey.y>500)
+          bolaKey.y = 500;
+        else if(bolaKey<100)
+          bolaKey.y = 100;
+
+        bolaMouse.x = bolaKey.x;
+        bolaMouse.y = bolaKey.y;
+
+        if(dead==enemyBoxes.length && e.keyCode == "13"){
+          window.location= "stageTwo.html";
+        }
+      }
+
+      function reset(){
+          bolaMouse.x = bolaKey.x;
+          bolaMouse.y = bolaKey.y;
+          jarakY=0;
+          jarakX=0;
+
+      }
+
+      function endStage(){
+        //insert transition here
+        bolaMouse.color = "blue";
+        document.getElementById("done").innerHTML = "Press Enter to Continue";
+        
+      }
+
+
+      (function drawFrame(){
+        
+        window.requestAnimationFrame(drawFrame,canvas);
+        context.clearRect(0,0,canvas.width,canvas.height);
+        context.drawImage(img,0,0,1200,1600);
+        document.getElementById("score").innerHTML = localStorage.getItem("score");
+
+        if(!mouseDitekan){
+            bolaMouse.x+=reduceSpd*jarakX/1000;
+            bolaMouse.y+=reduceHt*jarakY/1000;
+          };
+
+        if (bolaMouse.x>=canvas.width||bolaMouse.y<0){
+          reset();
+        }
+
+        
+        
+        if(jarakY<0)
+          reduceHt = reduceHt-gravitasi;
+        else
+          reduceHt = reduceHt+gravitasi;
+
+        if(bolaMouse.y >= (canvas.height-75 - bolaMouse.radius)){// || bolaMouse.x <= (0 + bolaMouse.radius)){
+          reduceSpd *= friksi;
+          reduceHt *= (-1*friksi);
+        }
+
+        if(bolaMouse.x <= (0+ bolaMouse.radius)){
+          reduceSpd *= (-1*friksi);
+          reduceHt *= friksi;
+        }
+
+        if((reduceSpd<10 && reduceSpd>-10)&&(reduceHt<10&&reduceHt>-10)){
+          reset();
+        }
+
+        for (var i = enemyBoxes.length - 1; i >= 0; i--) {
+          if(enemyBoxes[i]!=null)
+            if((bolaMouse.x+bolaMouse.radius>enemyBoxes[i].x-25)&&(bolaMouse.y+bolaMouse.radius>enemyBoxes[i].y-25)&&(bolaMouse.x+bolaMouse.radius<enemyBoxes[i].x+25)&&(bolaMouse.y+bolaMouse.radius<enemyBoxes[i].y+25)){
+              if(enemyBoxes[i].dead!=1)
+                localStorage.setItem("score", parseInt(localStorage.getItem("score"))+100);
+                enemyBoxes[i].color = "white";
+                enemyBoxes[i].dead = 1;
+                enemyBoxes[i].image.src = "blank.png"; 
+                
+
+              }
+        }
+        
+
+        if((bolaMouse.y+bolaMouse.radius>=300)&&(bolaMouse.x+bolaMouse.radius>=box.x+box.x1)&&(bolaMouse.x-bolaMouse.radius<=550)){
+          if(bolaMouse.x<=550)
+            bolaMouse.x = box.x -bolaMouse.radius;
+          else
+            bolaMouse.x = 550 + bolaMouse.radius;
+          reduceSpd *= (-1*friksi);
+          reduceHt *= friksi;
+        }
+
+        /*if((bolaMouse.y+bolaMouse.radius>=300)&&(bolaMouse.x+bolaMouse.radius>=box.x+box.x1)&&(bolaMouse.x<=box.x + box.x2)){
+            reduceHt *= (-1*friksi);
+            reduceSpd *=friksi;
+        }*/
+
+        console.log(reduceSpd);
+        console.log(reduceHt);
+
+
+
+        if(box!=null)
+        
+        //enemyBoxes.draw(context);
+        if(enemyBoxes.length!= dead)
+          for(var i = 0;i<3;i++){
+            enemyBoxes[i].draw(context);
+            if(enemyBoxes[i].dead)
+              dead++;
+          }
+        box.draw(context);
+        bolaMouse.draw(context);
+        bolaKey.draw(context);
+
+        console.log(dead);
+
+        if(enemyBoxes.length == dead)
+          endStage();
+        else
+          dead = 0;
+      }())
+      }
+		</script>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <script type="text/javascript" src="js/menu.js"></script>
+    <title>KeRaD GAME</title>
+  </head>
+  <body>
+    	<script src = "js/ball.js"></script>
+    	<script src="js/support.js"></script>
+      <script src="js/utils.js"></script>
+      <script src="js/randomColor.js"></script>
+      <script src="js/box.js"></script>   
+
+      <!--main menu-->
+      <div id="main-menu">
+        <img src="assets/Background/start.gif" id="back">
+        <h1 id="judul">KeRaD GAME</h1>
+        <div id="start" class="button" onmouseover="bigText(this)" onmouseout="normalText(this)" onclick="startGame()">
+          <h1><a href="stageOne.html" style="color: #ffffff">START</a></h1>
+        </div>    
+        <div id="help" class="button" onmouseover="bigText(this)" onmouseout="normalText(this)" onclick="showHelp()">
+          <h1>How to Play</h1>
+        </div>   
+        <div id="credit" class="button" onmouseover="bigText(this)" onmouseout="normalText(this)" onclick="showCredit()">
+          <h1>Credits</h1>
+        </div> 
+      </div>
+
+      <!--game -->
+      <div id="game" style="display: none"></div>
+
+      <!-- Help menu -->
+      <div id="how-to-play" style="display: none">
+        <img src="assets/Background/start.gif" id="help-back">
+        <div id="box-help">
+          <img src="assets/back-icon.png" id="back-icon" onclick="backToMenu()">
+          <div id="arrow-key">
+            <h1>Up Arrow = Menggerakkan ketapel ke atas</h1>
+            <h1>Down Arrow = Menggerakkan ketapel ke bawah</h1>
+            <h1>Left Arrow = Menggerakkan ketapel ke kiri</h1>
+            <h1>Right Arrow = Menggerakkan ketapel ke kanan</h1>
+          </div>
+          <div id="num-key">
+            <h1>Stage 1 - Batu biasa</h1>
+            <h1>Stage 2 - Molotov</h1>
+            <h1>Stage 3 - Batu sebar</h1>
+          </div>
+          <div id="mouse">
+            <h1>klik dan tahan untuk mengarahkan batu</h1>
+            <h1>lepaskan untuk menembakkan batu</h1>
+            <h1>tekan "Enter" untuk pindah stage ketika musuh sudah habis</h1>
+          </div>
+        </div>
+      </div>
+
+      <!--credit-->
+      <div id="credit-menu" style="display: none;">
+        <img src="assets/Background/start.gif" id="help-back">
+        <div id="box-credit">
+          <img src="assets/back-icon.png" id="back-icon" onclick="backToMenu()">
+          <div id="credit-text">
+            <h1 style="margin-left: 30px;">PROJECT TAS TEKNIK ANIMASI</h1>
+            <h1 style="text-align: center">Dibuat oleh :</h1>
+            <h1>Nathaniel Clarance <span style="margin-left: 80px"> </span>- 71150003</h1>
+            <h1>Nathanael Orvin <span style="margin-left: 118px"> </span>- 71150025</h1>
+            <h1>David Immanuel Widagdo  - 71150042</h1>
+            <h1>Julius Calvin Hary C <span style="margin-left: 47px"></span>   - 71150067</h1>
+          </div> 
+        </div>       
+      </div>
+  </body>
+</html>

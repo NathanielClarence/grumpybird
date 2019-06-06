@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<title>Apapun</title>
+	</head>
+	<body>
+		<canvas id = "canvas" width = "1200" height ="600"></canvas>
+	<script src = "js/utils.js"></script>
+	<script src = "js/ball.js"></script>
+		<script>
+			window.onload=function(){
+		var canvas =document.getElementById('canvas'),
+			context =canvas.getContext('2d'),
+			ball = new Ball(10,"red"),
+			tan=0,
+			tmaks=0,
+			gravity = 10,
+			time = 1;
+			angle =0;
+			radius=100;
+			ball.y = 600;
+			ball.x = 0;
+			ball.v0 =30;
+			tmaks = ball.v0*Math.sin(45)/10;
+			ball.v0x =ball.v0 * Math.cos(45);
+			ball.v0y =ball.v0 *Math.sin(45);
+			
+			function drop(){
+				ball.x = ball.v0*time;
+				ball.y = ball.y+(ball.v1y*Math.sin(45)*time + 0.5*gravity*Math.pow(time,2));
+				time +=0.1;
+			}
+
+			function ascend(){
+				ball.x = ball.v0*time;
+				ball.y = ball.y-(ball.v1y*Math.sin(45)*time + 0.5*gravity*Math.pow(time,2));
+				time +=0.1;
+			}
+
+			(function drawFrame(){
+			window.requestAnimationFrame(drawFrame, canvas);
+			//context.clearRect (0,0,canvas.width,canvas.height);
+				
+				
+				//ball.v1y = ball.v0y -gravity*time;
+				ascend();
+				//ball.v0 =ball.v0 * Math.sin(45);
+				/*alert(ball.v0);
+				alert(ball.v0x);
+				alert(ball.y);
+				alert(ball.x);
+				ball.v0 = Math.sqrt(Math.pow(ball.v0*Math.cos(45))+Math.pow(ball.v0*Math.sin(45)-gravity*time));*/
+				
+			//context.clearRect(0,0,1200,600);
+			ball.draw(context);	
+			}());
+			
+			} 	
+			</script>
+	</body>
+</html>

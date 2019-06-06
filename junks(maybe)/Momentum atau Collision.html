@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<title>Momentum</title>
+	</head>
+	<body>
+		<canvas id = "canvas" width = "400" height ="400"></canvas>
+		<script src = "js/utils.js"></script>
+		<script src = "js/ball.js"></script>
+		<script src="js/support.js"></script>
+		<script>
+			window.onload = function(){
+				var canvas = document.getElementById('canvas'),
+				context = canvas.getContext('2d'),
+				target = new Ball(100, "green"),
+				bola = new Ball(15, "red"),
+				spring = 0.15,
+				bounce = -1;
+
+				bola.x = 3;
+				bola.y = canvas.height/2;
+				bola.vx = 3;
+				bola.vy = 3;
+
+				target.x = canvas.width/2;
+				target.y = canvas.height/2;
+
+				function move(bola){
+					bola.x += bola.vx;
+					bola.y += bola.vy;
+					if (bola.x + bola.radius > canvas.width){
+						bola.x = canvas.width - bola.radius;
+						bola.vx *= bounce;
+					}
+					else if (bola.x - bola.radius < 0){
+						bola.x = bola.radius;
+						bola.vx *= bounce;
+					}
+					if (bola.y + bola.radius > canvas.height){
+						bola.y = bola.y-bola.radius;
+						bola.vy *= bounce;
+					}
+					if (bola.y - bola.radius < 0){
+						bola.y = bola.y+bola.radius;
+						bola.vy *= bounce;
+					}
+				}
+
+				function draw(bola){
+					var dx = bola.x - target.x,
+		            dy = bola.y - target.y,
+		            dist = Math.sqrt(dx * dx + dy * dy),
+		            min_dist = bola.radius + target.radius;
+
+		        if (dist < min_dist) {
+		          var angle = Math.atan2(dy, dx),
+		              tx = target.x + Math.cos(angle) * min_dist,
+		              ty = target.y + Math.sin(angle) * min_dist;
+		          bola.vx += (tx - bola.x) * spring;
+		          bola.vy += (ty - bola.y) * spring;
+		        }
+		        bola.draw(context);
+				}
+
+				(function drawFrame(){
+					window.requestAnimationFrame(drawFrame, canvas);
+					context.clearRect(0,0,canvas.width, canvas.height);
+
+					move(bola);
+					draw(bola);
+
+					target.draw(context);
+				}());
+			}
+		</script>
+	</body>
+</html>

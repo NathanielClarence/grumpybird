@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	
+	<body>
+
+	<canvas id = "canvas" width = "400" height ="400"></canvas>
+	<textarea id="log"></textarea>
+	<textarea id="log2"></textarea>
+	
+	<script src = "js/ball.js"></script>
+	<script src="js/support.js"></script>
+	<script>
+		window.onload = function(){
+
+
+		var canvas =document.getElementById('canvas'),
+			context =canvas.getContext('2d'),
+			mouse = supports.captureMouse(canvas),
+			gravitasi=0.08,
+			friksi =-0.7,
+			btsKanan = canvas.width
+			btsBawah = canvas.height
+			btsKiri = 0
+			log = document.getElementById('log'),
+			log2 = document.getElementById('log2'),
+			ball = new Ball(10,"red");
+			ball.x = canvas.width/2;
+			ball.y = 0;
+			ball.vx = Math.random() * 2;
+			ball.vy = Math.random() * 2;
+
+			ball.draw(context);
+			
+			(function drawFrame(){
+				window.requestAnimationFrame(drawFrame,canvas);
+				context.clearRect(0,0,canvas.width,canvas.height);
+				ball.vy += gravitasi;
+				ball.x += ball.vx;
+				ball.y += ball.vy;
+				log.value = "ball.vy = " + ball.vy;
+				log2.value = "ball.vx = " + ball.vx;
+				if(ball.y > canvas.height - ball.radius){
+					ball.vy *= friksi;
+				}
+
+				if(ball.x > canvas.width - ball.radius || 
+					ball.x < 0 + ball.radius){
+					ball.vx *= friksi;
+				}
+				//if(ball.x > btsKanan){ ball.vx *=-1; }
+				//if(ball.x == btsBawah){ ball.vx =0; }
+				//if(ball.y > btsKiri){ ball.vx *= 1; }
+			//	if((ball.x+ball.radius) > btsKanan){ ball.vx *=-1; }
+				ball.draw(context);
+				//console.log('aaaa');
+			}());
+
+				}
+			 
+			</script>
+
+	</body>
+</html>

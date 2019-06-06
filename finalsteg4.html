@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    
+    <title>Final Stage</title>
+  </head>
+  <body>
+      <img src="assets/Background/background-stage-1.gif" id="back-stage">
+      <img src="blank.png" id="filler">
+      <canvas id = "canvas" width = "1200" height ="600"></canvas>
+      <div id="score-field-2">
+        <h1>Score: </h1><h1 id="score"> 0</h1>
+      </div>
+      <div id= "xfield-2">
+        <h1 id = "done"></h1>
+      </div>
+    	<script src = "js/ball.js"></script>
+    	<script src = "js/ball2.js"></script>
+      <script src="js/support.js"></script>
+      <script src="js/utils.js"></script>
+      <script src="js/randomColor.js"></script>
+      <script src="js/box.js"></script>
+      <script src="js/enemyBox.js"></script>
+      <script src="js/enemyBox2.js"></script>
+      <script src="js/flyingEnemyBox.js"></script>
+      <script src="js/rock.js"></script>
+      
+      <script src="js/bolakecil.js"></script>
+      <script src="js/fire.js"></script>
+      <script src="js/molotov.js"></script>
+
+      <script>
+      var background = new Image();
+      window.onload=function(){
+			var canvas=document.getElementById('canvas'),
+			context=canvas.getContext('2d'),
+      img=document.getElementById("filler");
+			bolaKey=new Ball(5,"red"),
+			bolaMouse=new Rock(15,"green");
+      bolaMouse2=new Molotov(15,"green");
+      bolaMouse3=new Ball2(15,"green");
+      var mouseDitekan=false;
+      box=new Box(0,0,50,300,"red");
+      box.color=box.randomColor();
+      box.x=500;
+      box.y=canvas.height/2;
+      var dead = 0;
+      var peluru = 1;
+
+      var bolaAwalX =0;
+      var bolaAwalY =0;
+      var sudut = 0;
+      var jumBola =8;
+      var hasil = 360 / jumBola;
+      
+      var bola = [
+          new BolaK(5,"red"),
+          new BolaK(5,"red"),
+          new BolaK(5,"red"),
+          new BolaK(5,"red"),
+          new BolaK(5,"red"),
+          new BolaK(5,"red"),
+          new BolaK(5,"red"),
+          new BolaK(5,"red"),
+          new BolaK(5,"red")
+          ];
+
+          if(typeof(Storage)!=="undefined"){
+        //localStorage.setItem("score", 0);
+      }else{
+        alert("This browser is not supported");
+      }
+
+      var enemyBoxes = [
+          new enemyBox(-25,-25,50,50,"red"),
+          new enemyBox2(-25,-25,50,50,"red"),
+          new flyingEnemyBox(-25,-25,50,50,"red")
+      ];
+      
+      for(var i = 0; i<3;i++){
+      //  enemyBox[i] = new enemyBox(-25,-25,50,50,"red");
+        enemyBoxes[i].x = box.x + ((i+1)*200)+ box.x2;
+        enemyBoxes[i].y = canvas.height-100//enemyBoxes[i].y1;
+      }
+
+        enemyBoxes[2].y = 150;
+        enemyBoxes[2].vy = 3;
+        enemyBoxes[2].ystart = enemyBoxes[2].y;
+
+        //enemyBoxes[1].x = box.x + ((i+1)*200)+ box.x2;
+        enemyBoxes[1].vx = 3;
+        enemyBoxes[1].xstart = enemyBoxes[1].x;
+
+      var mouse = supports.captureMouse(canvas);
+			bolaKey.x=200;
+      bolaKey.y=350;
+
+      bolaMouse.x = bolaKey.x;
+      bolaMouse.y = bolaKey.y;
+
+      bolaMouse.vx = 100;
+      bolaMouse.vy = 100;
+
+      var gravitasi=3,
+      friksi =0.75;
+
+      var jarakY = 0,
+      jarakX = 0;
+
+      var reduceSpd = 0,
+      reduceHt = 0;
+			
+      window.addEventListener("keydown", fungsiKeyboard,false);
+      canvas.addEventListener('mousedown',function(){
+        if(bolaMouse.x!=bolaKey.radius||bolaMouse.y!=bolaKey
+          .radius){
+          mouseDitekan=true;
+
+          canvas.addEventListener('mouseup',onMouseUp,false);
+          canvas.addEventListener('mousemove',onMouseMove,false);
+        localStorage.setItem("score", (parseInt(localStorage.getItem("score")) - 25));
+        }
+
+      function onMouseUp(){
+        mouseDitekan=false;
+
+        jarakX = bolaKey.x-bolaMouse.x,
+        jarakY = bolaKey.y-bolaMouse.y;
+
+        reduceHt = bolaMouse.vy;
+        reduceSpd = bolaMouse.vx;
+
+        canvas.removeEventListener('mouseup',onMouseUp,false);
+        canvas.removeEventListener('mousemove',onMouseMove,false);
+      }
+
+      function onMouseMove(){
+        bolaMouse.x=mouse.x;
+        bolaMouse.y=mouse.y;
+
+        bolaMouse2.x=mouse.x;
+        bolaMouse2.y=mouse.y;
+
+        bolaMouse3.x=mouse.x;
+        bolaMouse3.y=mouse.y;
+        }
+      });
+
+      function fungsiKeyboard(e){
+        if(e.keyCode == "37"){
+          bolaKey.x-=5;
+        }
+        else if(e.keyCode == "38"){
+          bolaKey.y-=5;
+        }
+        else if(e.keyCode == "39"){
+          bolaKey.x+=5;
+        }
+        else if(e.keyCode == "40"){
+          bolaKey.y+=5;
+        }
+
+        if(bolaKey.x>canvas.width/2){
+          bolaKey.x = canvas.width/2;
+        }else if(bolaKey.x<100)
+          bolaKey.x = 100;
+
+        if(bolaKey.y>500)
+          bolaKey.y = 500;
+        else if(bolaKey<100)
+          bolaKey.y = 100;
+
+        bolaMouse.x = bolaKey.x;
+        bolaMouse.y = bolaKey.y;
+        bolaMouse2.x = bolaKey.x;
+        bolaMouse2.y = bolaKey.y;
+        bolaMouse3.x = bolaKey.x;
+        bolaMouse3.y = bolaKey.y;
+
+        if(dead==enemyBoxes.length && e.keyCode == "13"){
+          window.location= "index.html";
+        }
+
+        if(e.keyCode == "49"){
+          peluru = 1;
+       //   bolaMouse.draw(context);
+
+        }
+        if(e.keyCode == "50"){
+          peluru = 2;
+         // bolaMouse2.draw(context);
+        }
+        if(e.keyCode == "51"){
+          peluru = 3;
+         // bolaMouse3.draw(context);
+        }
+      }
+
+      function onFire(){
+        fireRange = null;
+        clearTimeout(timer);
+      }
+
+      function spread(){
+        for(var i =0 ;i< jumBola+1;i++){
+           bolaAwalX= bolaMouse3.x;
+           bolaAwalY = bolaMouse3.y;
+           sudut = 360 / jumBola * i;
+
+           //bola[i] = new BolaK(10, "blue");
+
+          bola[i].vx = Math.floor(Math.random()*reduceSpd);
+          bola[i].vy = Math.floor(Math.random()*reduceHt);
+
+          bola[i].x = bolaAwalX + bola[i].vx;// Math.tan(sudut)*i;
+          bola[i].y = bolaAwalY + bola[i].vy;//Math.tan(sudut)*i;
+          console.log("bola ke" + i + "tercipta");
+          bola[i].draw(context);
+        }
+      }
+
+      function reset(){
+
+          bolaMouse.x = bolaKey.x;
+          bolaMouse.y = bolaKey.y;
+
+          bolaMouse2.x = bolaKey.x;
+          bolaMouse2.y = bolaKey.y;
+
+          if(peluru == 3){
+            first = 1;
+          bolaMouse3.x = bolaKey.x;
+          bolaMouse3.y = bolaKey.y;
+          jarakY=0;
+          jarakX=0;
+          }/*
+          bolaMouse3.x = bolaKey.x;
+          bolaMouse3.y = bolaKey.y;*/
+          jarakY=0;
+          jarakX=0;
+      }
+
+      function endStage(){
+        //insert transition here
+        bolaMouse.color = "blue";
+        document.getElementById("done").innerHTML = "Press Enter to Continue";
+      }
+
+      var fireRange=null;
+      var first = 1;
+
+      (function drawFrame(){
+        
+        window.requestAnimationFrame(drawFrame,canvas);
+        context.clearRect(0,0,canvas.width,canvas.height);
+        context.drawImage(img,0,0,1200,1600);
+
+
+        document.getElementById("score").innerHTML = localStorage.getItem("score");
+
+
+        if(!mouseDitekan){
+            bolaMouse.x+=reduceSpd*jarakX/1000;
+            bolaMouse.y+=reduceHt*jarakY/1000;
+            
+            bolaMouse2.x+=reduceSpd*jarakX/1000;
+            bolaMouse2.y+=reduceHt*jarakY/1000;
+
+            bolaMouse3.x+=reduceSpd*jarakX/1000;
+            bolaMouse3.y+=reduceHt*jarakY/1000;
+          };
+
+        if (bolaMouse.x>=canvas.width||bolaMouse.y<0 || bolaMouse2.x>=canvas.width||bolaMouse2.y<0 || bolaMouse3.x>=canvas.width||bolaMouse3.y<0){
+          reset();
+        }
+
+        if(jarakY<0)
+          reduceHt = reduceHt-gravitasi;
+        else
+          reduceHt = reduceHt+gravitasi;
+
+        if(bolaMouse2.y >= (canvas.height-75 - bolaMouse2.radius) && peluru == 2){
+          if(fireRange==null){
+            fireRange = new Fire(-100,-25,200,50,"red");
+            fireRange.x = bolaMouse2.x;
+            fireRange.y = canvas.height-100;
+
+          }
+          //ball invisible for 5 secs, fire on for 5 secs
+          timer = setTimeout(onFire, 2000);
+          reset();
+        }
+
+        if(bolaMouse.y >= (canvas.height-75 - bolaMouse.radius) || bolaMouse2.y >= (canvas.height-75 - bolaMouse2.radius) || bolaMouse3.y >= (canvas.height-75 - bolaMouse3.radius)){// || bolaMouse.x <= (0 + bolaMouse.radius)){
+          reduceSpd *= friksi;
+          reduceHt *= (-1*friksi);
+        }
+
+        if(bolaMouse.x <= (0+ bolaMouse.radius) || bolaMouse2.x <= (0+ bolaMouse2.radius) || bolaMouse3.x <= (0+ bolaMouse3.radius)){
+          reduceSpd *= (-1*friksi);
+          reduceHt *= friksi;
+        }
+
+        if((reduceSpd<10 && reduceSpd>-10)&&(reduceHt<10&&reduceHt>-10)){
+          reset();
+        }
+
+        for (var i = enemyBoxes.length - 1; i >= 0; i--) {
+          if(enemyBoxes[i]!=null)
+            if((bolaMouse.x+bolaMouse.radius>enemyBoxes[i].x-25)&&(bolaMouse.y+bolaMouse.radius>enemyBoxes[i].y-25)&&(bolaMouse.x+bolaMouse.radius<enemyBoxes[i].x+25)&&(bolaMouse.y+bolaMouse.radius<enemyBoxes[i].y+25)&&(peluru==1)){
+
+              if(enemyBoxes[i].dead!=1)
+                localStorage.setItem("score", parseInt(localStorage.getItem("score"))+100);
+                enemyBoxes[i].color = "white";
+                enemyBoxes[i].dead = 1;
+                enemyBoxes[i].image.src = "blank.png"; 
+              }
+
+            if((fireRange!=null)&&(enemyBoxes[i].x >= fireRange.x-100)&&(enemyBoxes[i].x <= fireRange.x + 100)&&(peluru==2)){
+
+              if(enemyBoxes[i].dead!=1)
+                localStorage.setItem("score", parseInt(localStorage.getItem("score"))+100);
+                enemyBoxes[i].color = "white";
+                enemyBoxes[i].dead = 1;
+                enemyBoxes[i].image.src = "blank.png"; 
+              }
+            else{
+              enemyBoxes[i].x += enemyBoxes[i].vx;
+              if(enemyBoxes[i].xstart-75>=enemyBoxes[i].x||enemyBoxes[i].xstart+75<=enemyBoxes[i].x)
+                enemyBoxes[i].vx *= -1;
+              enemyBoxes[i].y += enemyBoxes[i].vy;
+              if(enemyBoxes[i].ystart-75>=enemyBoxes[i].y||enemyBoxes[i].ystart+75<=enemyBoxes[i].y)
+                enemyBoxes[i].vy *= -1;
+            }
+
+
+            if(peluru==3){
+            for (var j = bola.length - 1; j >= 0; j--) {
+            if((bola[j].x+bola[j].radius>enemyBoxes[i].x-25)&&(bola[j].y+bola[j].radius>enemyBoxes[i].y-25)&&(bola[j].x+bola[j].radius<enemyBoxes[i].x+25)&&(bola[j].y+bola[j].radius<enemyBoxes[i].y+25)){
+              
+              if(enemyBoxes[i].dead!=1)
+                localStorage.setItem("score", parseInt(localStorage.getItem("score"))+100);
+                enemyBoxes[i].color = "white";
+                enemyBoxes[i].dead = 1;
+                enemyBoxes[i].image.src = "blank.png";
+              }
+            }
+          }
+        }
+        
+
+        if((bolaMouse.y+bolaMouse.radius>=300)&&(bolaMouse.x+bolaMouse.radius>=box.x+box.x1)&&(bolaMouse.x-bolaMouse.radius<=550)){
+          if(bolaMouse.x<=550)
+            bolaMouse.x = box.x -bolaMouse.radius;
+          else
+            bolaMouse.x = 550 + bolaMouse.radius;
+          reduceSpd *= (-1*friksi);
+          reduceHt *= friksi;
+        }
+
+        /*if((bolaMouse.y+bolaMouse.radius>=300)&&(bolaMouse.x+bolaMouse.radius>=box.x+box.x1)&&(bolaMouse.x<=box.x + box.x2)){
+            reduceHt *= (-1*friksi);
+            reduceSpd *=friksi;
+        }*/
+
+        console.log(reduceSpd);
+        console.log(reduceHt);
+
+
+
+        if(box!=null)
+        
+        //enemyBoxes.draw(context);
+        if(enemyBoxes.length!= dead)
+          for(var i = 0;i<3;i++){
+            enemyBoxes[i].draw(context);
+            if(enemyBoxes[i].dead)
+              dead++;
+          }
+        box.draw(context);
+
+
+        if(peluru == 1)
+        bolaMouse.draw(context);
+        else if(peluru ==2){
+          if(fireRange !=null){fireRange.draw(context);
+          }else
+        bolaMouse2.draw(context);}
+        else if(peluru ==3){
+          if(bolaMouse3.x >= 600&&first){
+          spread();
+          first = 0;
+        }else if(bolaMouse3.x>= 600){
+          for(var i =0 ;i< jumBola+1;i++){
+            bolaAwalX= bola[i].x;
+            bolaAwalY = bola[i].y;
+            sudut = 360 / jumBola * i;
+
+            bola[i].x = bolaAwalX + bola[i].vx;//+ Math.tan(sudut)*i;
+            bola[i].y = bolaAwalY + bola[i].vy;//+ Math.tan(sudut)*i;
+            //console.log("bola ke" + i + "tercipta");
+            bola[i].draw(context);
+          }
+        }else
+         bolaMouse3.draw(context);
+        }
+        
+
+        bolaKey.draw(context);
+        
+
+        console.log(dead);
+
+        if(enemyBoxes.length == dead)
+          endStage();
+        else
+          dead = 0;
+      }())
+      }
+		</script>
+  </body>
+</html>
